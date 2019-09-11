@@ -19,7 +19,7 @@
 
 
 var app = {
-  
+
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -38,7 +38,7 @@ var app = {
         console.log('Received Event: ' + id);
     },
 
-    paused: true
+    paused: false
 };
 
 // Add to index.js or the first page that loads with your app.
@@ -47,7 +47,7 @@ var app = {
 document.addEventListener('deviceready', function () {
   // Enable to debug issues.
   window.plugins.OneSignal.setLogLevel({logLevel: 6, visualLevel: 0});
-  
+
   var notificationOpenedCallback = function(jsonData) {
     console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
   };
@@ -55,11 +55,11 @@ document.addEventListener('deviceready', function () {
   window.plugins.OneSignal.setLocationShared(false);
 
   window.plugins.OneSignal
-    .startInit("706eae1b-7c2c-4e92-907d-c90dc6416a63")
+    .startInit("77e32082-ea27-42e3-a898-c72e141824ef")
     .handleNotificationOpened(notificationOpenedCallback)
     .handleInAppMessageClicked((result)=>{console.log("clicked!!", JSON.stringify(result))})
     .endInit();
-   
+
    window.plugins.OneSignal.pauseInAppMessages(app.paused);
 
   window.plugins.OneSignal.promptLocation();
@@ -67,10 +67,11 @@ document.addEventListener('deviceready', function () {
     document.getElementById('sendTags').addEventListener('click', sendTags);
     document.getElementById('getTags').addEventListener('click', getTags);
     document.getElementById('printSubscription').addEventListener('click', printSubscription);
-    document.getElementById('trig1').addEventListener('click', addTrigger1);
-    document.getElementById('trig2').addEventListener('click', addTrigger2);
-    document.getElementById('trig1Remove').addEventListener('click', removeTrigger1);
-    document.getElementById('trig2Remove').addEventListener('click', removeTrigger2);
+
+    document.getElementById('add_trigger_button').addEventListener('click', addTrigger);
+    document.getElementById('remove_trigger_button').addEventListener('click', removeTrigger);
+    document.getElementById('get_trigger_button').addEventListener('click', getTrigger);
+
     document.getElementById('pauseIAM').addEventListener('click', ()=>{
       const paused = !app.paused;
       console.log("will pause:", paused);
@@ -97,33 +98,32 @@ function printSubscription(){
   });
 }
 
-function addTrigger1(){
-  window.plugins.OneSignal.addTrigger("trig1", "true");
-  checkTriggers();
+function addTrigger(){
+    var triggerKey = document.getElementById('add_trigger_key').value;
+    var triggerValue = document.getElementById('add_trigger_value').value;
+    console.log("Adding trigger key:", triggerKey, "with trigger value:", triggerValue);
+    window.plugins.OneSignal.addTrigger(triggerKey, triggerValue);
+    
+    checkTrigger(triggerKey);
 }
 
-function addTrigger2(){
-  window.plugins.OneSignal.addTriggers({trig1:"1", "trig2":"true"});
-  checkTriggers();
+function checkTrigger(triggerKey){
+    window.plugins.OneSignal.getTriggerValueForKey(triggerKey, function (triggerValue) {
+       console.log(triggerKey, triggerValue);
+    });
 }
 
-function removeTrigger1(){
-  window.plugins.OneSignal.removeTriggerForKey("trig1");
-  checkTriggers();
+function removeTrigger(){
+    var triggerKey = document.getElementById('remove_trigger_key').value;
+    console.log("Removing trigger with key:", triggerKey);
+    window.plugins.OneSignal.removeTriggerForKey(triggerKey);
+    
+    checkTrigger(triggerKey);
 }
 
-function removeTrigger2(){
-  window.plugins.OneSignal.removeTriggersForKeys(["trig1", "trig2"]);
-  checkTriggers();
-}
-
-function checkTriggers(){
-  window.plugins.OneSignal.getTriggerValueForKey("trig1", function (value) {
-    console.log("trig1:", value);
-  });
-  window.plugins.OneSignal.getTriggerValueForKey("trig2", function (value) {
-    console.log("trig2:", value);
-  });
+function getTrigger(){
+    var triggerKey = document.getElementById('get_trigger_key').value;
+    checkTrigger(triggerKey);
 }
 
 app.initialize();
