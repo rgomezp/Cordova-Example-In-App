@@ -38,17 +38,36 @@
     <body>
         <div class="app">
             <h1>Cordova OneSignal Demo App</h1>
-            <div class="onesignal">
+            <div class="onesignal" style="height: 1200px;">
                 <p id="tags">Tags:</p>
                 <p id="subscription">Subscription State:</p>
                 <p id="userId">userId:</p>
                 <button id="getTags">Get Tags</button>
                 <button id="sendTags">Send Tags</button>
                 <button id="printSubscription">Print Subscription State</button>
-                <button id="trig1">Add In-App Trigger (1)</button>
-                <button id="trig2">Add In-App Triggers (2)</button>
-                <button id="trig1Remove">Remove In-App Trigger (1)</button>
-                <button id="trig2Remove">Remove In-App Trigger (2)</button>
+
+                <p>
+                    <label id="add_trigger_key_label">Trigger key</label>
+                    <input id="add_trigger_key"></input>
+                </p>
+                <p>
+                    <label id="add_trigger_value_label">Trigger value</label>
+                    <input id="add_trigger_value"></input>
+                </p>
+                <button id="add_trigger_button">Add Trigger</button>
+                
+                <p>
+                    <label id="remove_trigger_label">Trigger key</label>
+                    <input id="remove_trigger_key"></input>
+                </p>
+                <button id="remove_trigger_button">Remove Trigger</button>
+                
+                <p>
+                    <label id="get_trigger_label">Trigger key</label>
+                    <input id="get_trigger_key"></input>
+                </p>
+                <button id="get_trigger_button">Get Trigger</button>
+
                 <button id="pauseIAM">Pause IAM</button>
             </div>
         </div>
