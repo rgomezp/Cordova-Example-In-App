@@ -16,7 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+
 var app = {
+  
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -33,7 +36,9 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         console.log('Received Event: ' + id);
-    }
+    },
+
+    paused: true
 };
 
 // Add to index.js or the first page that loads with your app.
@@ -47,17 +52,31 @@ document.addEventListener('deviceready', function () {
     console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
   };
 
+  window.plugins.OneSignal.setLocationShared(false);
+
   window.plugins.OneSignal
     .startInit("706eae1b-7c2c-4e92-907d-c90dc6416a63")
     .handleNotificationOpened(notificationOpenedCallback)
-    .handleInAppMessageClicked((result)=>{console.log("clicked!", result)})
+    .handleInAppMessageClicked((result)=>{console.log("clicked!!", JSON.stringify(result))})
     .endInit();
+   
+   window.plugins.OneSignal.pauseInAppMessages(app.paused);
+
+  window.plugins.OneSignal.promptLocation();
 
     document.getElementById('sendTags').addEventListener('click', sendTags);
     document.getElementById('getTags').addEventListener('click', getTags);
     document.getElementById('printSubscription').addEventListener('click', printSubscription);
     document.getElementById('trig1').addEventListener('click', addTrigger1);
     document.getElementById('trig2').addEventListener('click', addTrigger2);
+    document.getElementById('trig1Remove').addEventListener('click', removeTrigger1);
+    document.getElementById('trig2Remove').addEventListener('click', removeTrigger2);
+    document.getElementById('pauseIAM').addEventListener('click', ()=>{
+      const paused = !app.paused;
+      console.log("will pause:", paused);
+      window.plugins.OneSignal.pauseInAppMessages(paused);
+      app.paused = paused;
+    });
 }, false);
 
 function sendTags(){
@@ -80,10 +99,31 @@ function printSubscription(){
 
 function addTrigger1(){
   window.plugins.OneSignal.addTrigger("trig1", "true");
+  checkTriggers();
 }
 
 function addTrigger2(){
-  window.plugins.OneSignal.addTrigger("trig2", "true");
+  window.plugins.OneSignal.addTriggers({trig1:"1", "trig2":"true"});
+  checkTriggers();
+}
+
+function removeTrigger1(){
+  window.plugins.OneSignal.removeTriggerForKey("trig1");
+  checkTriggers();
+}
+
+function removeTrigger2(){
+  window.plugins.OneSignal.removeTriggersForKeys(["trig1", "trig2"]);
+  checkTriggers();
+}
+
+function checkTriggers(){
+  window.plugins.OneSignal.getTriggerValueForKey("trig1", function (value) {
+    console.log("trig1:", value);
+  });
+  window.plugins.OneSignal.getTriggerValueForKey("trig2", function (value) {
+    console.log("trig2:", value);
+  });
 }
 
 app.initialize();
