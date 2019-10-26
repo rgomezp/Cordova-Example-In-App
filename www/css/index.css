@@ -93,13 +93,13 @@ h1 {
     50% { opacity: 0.4; }
     to { opacity: 1.0; }
 }
- 
+
 @-webkit-keyframes fade {
     from { opacity: 1.0; }
     50% { opacity: 0.4; }
     to { opacity: 1.0; }
 }
- 
+
 .blink {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
@@ -109,5 +109,5 @@ h1 {
     margin: 10px;
     font-size: 20px;
     width: 200px;
-    background-color: #E34B4D; 
+    background-color: #E34B4D;
 }
