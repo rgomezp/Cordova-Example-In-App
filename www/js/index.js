@@ -62,8 +62,6 @@ document.addEventListener('deviceready', function () {
         })
         .endInit();
 
-    window.plugins.OneSignal.pauseInAppMessages(app.paused);
-
     window.plugins.OneSignal.promptLocation();
 
     document.getElementById('sendTags').addEventListener('click', sendTags);
