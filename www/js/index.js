@@ -67,6 +67,7 @@ document.addEventListener('deviceready', function () {
     document.getElementById('sendTags').addEventListener('click', sendTags);
     document.getElementById('getTags').addEventListener('click', getTags);
     document.getElementById('printSubscription').addEventListener('click', printSubscription);
+    document.getElementById('postNotification').addEventListener('click', postNotification);
 
     document.getElementById('add_trigger_button').addEventListener('click', addTrigger);
     document.getElementById('remove_trigger_button').addEventListener('click', removeTrigger);
@@ -99,6 +100,24 @@ function printSubscription() {
     window.plugins.OneSignal.getPermissionSubscriptionState((status) => {
         document.getElementById('subscription').innerHTML = "Subscription State: " + status.subscriptionStatus.subscribed;
         document.getElementById('userId').innerHTML = "userId: " + status.subscriptionStatus.userId;
+    });
+}
+
+function postNotification() {
+    window.plugins.OneSignal.getPermissionSubscriptionState((status) => {
+        let notificationJson = {
+            "contents": {"en" : "Test message"},
+            "": "",
+            "include_player_ids": [status.subscriptionStatus.userId]
+        };
+        window.plugins.OneSignal.postNotification(notificationJson,
+            (result) => {
+                console.log("NOTIFICATION POST SUCCESS");
+            },
+            (error) => {
+                console.log("NOTIFICATION POST ERROR");
+            }
+        );
     });
 }
 
