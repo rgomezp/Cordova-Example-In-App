@@ -52,22 +52,25 @@ document.addEventListener('deviceready', function () {
         console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
     };
 
-    window.plugins.OneSignal.setLocationShared(false);
-
     window.plugins.OneSignal
         .startInit("77e32082-ea27-42e3-a898-c72e141824ef")
+        .inFocusDisplaying(1)
         .handleNotificationOpened(notificationOpenedCallback)
         .handleInAppMessageClicked((result) => {
             console.log("clicked!!", JSON.stringify(result))
         })
         .endInit();
 
-    window.plugins.OneSignal.promptLocation();
+    window.plugins.OneSignal.pauseInAppMessages(true);
+    window.plugins.OneSignal.setLocationShared(false);
 
     document.getElementById('sendTags').addEventListener('click', sendTags);
     document.getElementById('getTags').addEventListener('click', getTags);
     document.getElementById('printSubscription').addEventListener('click', printSubscription);
     document.getElementById('postNotification').addEventListener('click', postNotification);
+
+    document.getElementById('set_external_user_id_button').addEventListener('click', setExternalUserId);
+    document.getElementById('remove_external_user_id_button').addEventListener('click', removeExternalUserId);
 
     document.getElementById('add_trigger_button').addEventListener('click', addTrigger);
     document.getElementById('remove_trigger_button').addEventListener('click', removeTrigger);
@@ -118,6 +121,19 @@ function postNotification() {
                 console.log("NOTIFICATION POST ERROR");
             }
         );
+    });
+}
+
+function setExternalUserId() {
+    var externalUserId = document.getElementById('external_user_id').value;
+    window.plugins.OneSignal.setExternalUserId(externalUserId, (results) => {
+        console.log('Results of setting external user id: ' + JSON.stringify(results));
+    });
+}
+
+function removeExternalUserId() {
+    window.plugins.OneSignal.removeExternalUserId((results) => {
+        console.log('Results of removing external user id: ' + JSON.stringify(results));
     });
 }
 
